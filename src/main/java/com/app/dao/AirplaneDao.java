@@ -6,7 +6,9 @@ import com.app.model.Crew;
 import java.util.List;
 
 public interface AirplaneDao {
-
+/*
+    Java doc sample
+ */
     void save(Airplane airplane);
 
     List<Airplane> findAll();
