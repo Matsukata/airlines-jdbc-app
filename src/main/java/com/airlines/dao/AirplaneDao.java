@@ -1,7 +1,7 @@
-package com.app.dao;
+package com.airlines.dao;
 
-import com.app.model.Airplane;
-import com.app.model.Crew;
+import com.airlines.model.Airplane;
+import com.airlines.model.Crew;
 
 import java.util.List;
 
@@ -15,5 +15,7 @@ public interface AirplaneDao {
 
     void remove(Airplane airplane);
 
-    Airplane findOne(Crew firstName, Crew lastName);
+    Airplane findByCrewName(String crewName);
+
+    Airplane update(Crew crew);
 }

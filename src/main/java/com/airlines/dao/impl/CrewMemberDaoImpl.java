@@ -1,8 +1,9 @@
-package com.app.dao;
+package com.airlines.dao.impl;
 
-import com.app.exception.DaoOperationException;
-import com.app.model.Airplane;
-import com.app.model.Crew;
+import com.airlines.dao.CrewMemberDao;
+import com.airlines.exception.DaoOperationException;
+import com.airlines.model.Airplane;
+import com.airlines.model.CrewMember;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -11,26 +12,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CrewDaoImpl implements CrewDao {
+public class CrewMemberDaoImpl implements CrewMemberDao {
+    private static final String INSERT_QUERY = "INSERT INTO crew " +
+            "(first_name, last_name, position, birthday, citizenship) VALUES (?, ?, ?, ?, ?) ;";
 
     private DataSource dataSource;
 
-    public CrewDaoImpl(DataSource dataSource) {
+    public CrewMemberDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public void save(Crew crew) {
-        String query = "INSERT INTO crew " +
-                "(first_name, last_name, position, birthday, citizenship) VALUES (?, ?, ?, ?, ?) ;";
+    public void save(CrewMember crew) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement insertStatement = connection.prepareStatement(query,
+             PreparedStatement insertStatement = connection.prepareStatement(INSERT_QUERY,
                      PreparedStatement.RETURN_GENERATED_KEYS);) {
             insertStatement.setString(1, crew.getFirstName());
             insertStatement.setString(2, crew.getLastName());
-            insertStatement.setString(3, crew.getPosition());
+            insertStatement.setObject(3, crew.getPosition());
             insertStatement.setDate(4, Date.valueOf(crew.getBirthday()));
-            insertStatement.setString(5, crew.getCitizenship());
+            insertStatement.setObject(5, crew.getCitizenship());
             insertStatement.executeUpdate();
             ResultSet generatedKeys = insertStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -43,12 +44,17 @@ public class CrewDaoImpl implements CrewDao {
     }
 
     @Override
-    public Crew findOne(Long id) {
+    public CrewMember findOne(Long id) {
         return null;
     }
 
     @Override
-    public Crew link(Airplane airplane, Long id) {
+    public CrewMember link(Airplane airplane, Long id) {
+        return null;
+    }
+
+    @Override
+    public CrewMember update(CrewMember crewMember) {
         return null;
     }
 }
