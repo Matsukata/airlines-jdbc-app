@@ -5,7 +5,7 @@ import com.airlines.model.CrewMember;
 
 import java.util.List;
 
-public interface CrewDao {
+public interface CrewDao { // should be implemented
     void add(CrewMember crewMember, Crew crew);
 
     List<CrewMember> getByCrewId(long id);
