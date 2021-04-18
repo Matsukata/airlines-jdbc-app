@@ -5,5 +5,5 @@ public enum Citizenship {
     NORWEGIAN,
     BRAZILIAN,
     KOREAN,
-    CHINESE
+    CHINESE;
 }

@@ -6,5 +6,5 @@ public enum Position {
     SECOND_OFFICER,
     FLIGHT_ATTENDANT,
     FLIGHT_ENGINEER,
-    AIRCRAFT_PILOT;
+    AIRCRAFT_PILOT
 }
