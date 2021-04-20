@@ -13,8 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CrewMemberDaoImpl implements CrewMemberDao {
-    private static final String INSERT_QUERY = "INSERT INTO crew " +
-            "(first_name, last_name, position, birthday, citizenship) VALUES (?, ?, ?, ?, ?) ;";
+    private static final String INSERT_QUERY = "INSERT INTO crew_members " +
+            "(first_name, last_name, position, birthday, citizenship) VALUES (?, ?, ?, ?, ?);";
 
     private DataSource dataSource;
 
