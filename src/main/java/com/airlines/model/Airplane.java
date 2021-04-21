@@ -9,12 +9,12 @@ public class Airplane {
     private LocalDate manufactureDate;
     private int capacity;
     private int flightRange;
-    private CrewMember crew;
+    private Crew crew;
 
     public Airplane() {
     }
 
-    public Airplane(Long id, String codeName, String model, LocalDate manufactureDate, int capacity, int flightRange, CrewMember crew) {
+    public Airplane(Long id, String codeName, String model, LocalDate manufactureDate, int capacity, int flightRange, Crew crew) {
         this.id = id;
         this.codeName = codeName;
         this.model = model;
@@ -72,11 +72,11 @@ public class Airplane {
         this.flightRange = flightRange;
     }
 
-    public CrewMember getCrew() {
+    public Crew getCrew() {
         return crew;
     }
 
-    public void setCrew(CrewMember crew) {
+    public void setCrew(Crew crew) {
         this.crew = crew;
     }
 

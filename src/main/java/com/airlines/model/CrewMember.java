@@ -62,6 +62,14 @@ public class CrewMember {
         return citizenship;
     }
 
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public void setCitizenship(Citizenship citizenship) {
+        this.citizenship = citizenship;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
