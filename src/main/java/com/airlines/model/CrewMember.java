@@ -81,11 +81,21 @@ public class CrewMember {
 
         CrewMember crew = (CrewMember) o;
 
-        if (id != null ? !id.equals(crew.id) : crew.id != null) return false;
-        if (firstName != null ? !firstName.equals(crew.firstName) : crew.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(crew.lastName) : crew.lastName != null) return false;
-        if (position != null ? !position.equals(crew.position) : crew.position != null) return false;
-        if (birthday != null ? !birthday.equals(crew.birthday) : crew.birthday != null) return false;
+        if (id != null ? !id.equals(crew.id) : crew.id != null) {
+            return false;
+        }
+        if (firstName != null ? !firstName.equals(crew.firstName) : crew.firstName != null) {
+            return false;
+        }
+        if (lastName != null ? !lastName.equals(crew.lastName) : crew.lastName != null) {
+            return false;
+        }
+        if (position != null ? !position.equals(crew.position) : crew.position != null) {
+            return false;
+        }
+        if (birthday != null ? !birthday.equals(crew.birthday) : crew.birthday != null) {
+            return false;
+        }
         return citizenship != null ? citizenship.equals(crew.citizenship) : crew.citizenship == null;
     }
 

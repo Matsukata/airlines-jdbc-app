@@ -18,7 +18,7 @@ import static java.lang.String.format;
 public class CrewMemberDaoImpl implements CrewMemberDao {
     private static final String INSERT_QUERY = "INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship) VALUES (?, ?, ?, ?, ?);";
     private static final String SELECT_BY_ID_QUERY = "SELECT * FROM crew_members WHERE id = ?;";
-    private static final String UPDATE_CREW_MEMBER_QUERY = "UPDATE crew_members SET first_name = ?, last_name = ?, position = ?, birthday = ?, citizenship = ? WHERE id = ?;";
+    private static final String UPDATE_QUERY = "UPDATE crew_members SET first_name = ?, last_name = ?, position = ?, birthday = ?, citizenship = ? WHERE id = ?;";
 
     private DataSource dataSource;
 
@@ -73,7 +73,7 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
     @Override
     public CrewMember update(CrewMember crewMember) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_CREW_MEMBER_QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             if (crewMember.getId() == null) {
                 throw new IllegalArgumentException("CrewMember id should not be null");
             }
