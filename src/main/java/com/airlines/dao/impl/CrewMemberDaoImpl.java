@@ -47,8 +47,8 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
 
     @Override
     public CrewMember findById(Long id) {
-        if (id == 0 || id < 0) {
-            throw new DaoOperationException(String.format("The member of the crew with id = %d does not exist", id));
+        if (id == null) {
+            throw new DaoOperationException("Cannot find the member because Id is not provided");
         }
         CrewMember crewMember = new CrewMember();
         try (Connection connection = dataSource.getConnection();
@@ -62,8 +62,8 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
                 crewMember.setPosition(Position.valueOf(resultSet.getString("position")));
                 crewMember.setCitizenship(Citizenship.valueOf(resultSet.getString("citizenship")));
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            throw new DaoOperationException("Failed to find a member with Id = %d" + id, e);
         }
         return crewMember;
     }
@@ -71,26 +71,19 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
     @Override
     public CrewMember update(CrewMember crewMember) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_CREW_MEMBERS_SQL, PreparedStatement.RETURN_GENERATED_KEYS);) {
-            ResultSet generatedKeys = statement.getGeneratedKeys();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_CREW_MEMBERS_SQL)) {
             if (crewMember.getId() == null) {
-                throw new DaoOperationException("Cannot find the member without ID");
-            }
-            if (crewMember.getId() < 0) {
-                throw new DaoOperationException(String.format("The member of the crew with id = %d does not exist", crewMember.getId()));
-            }
-            if (generatedKeys.next()) {
-                long id = generatedKeys.getLong(5);
-                crewMember.setId(id);
+                throw new IllegalArgumentException("Cannot update the member because Id is not provided");
             }
             statement.setString(1, crewMember.getFirstName());
             statement.setString(2, crewMember.getLastName());
             statement.setString(3, crewMember.getPosition().toString());
             statement.setDate(4, Date.valueOf(crewMember.getBirthday()));
             statement.setString(5, crewMember.getCitizenship().toString());
+            statement.setLong(6, crewMember.getId());
             statement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            throw new DaoOperationException("Failed to update a member with Id = %d" + crewMember.getId(), e);
         }
         return crewMember;
     }

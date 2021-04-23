@@ -4,6 +4,7 @@ import com.airlines.dao.AirplaneDao;
 import com.airlines.exception.DaoOperationException;
 import com.airlines.model.Airplane;
 import com.airlines.model.Crew;
+import com.airlines.model.CrewMember;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -16,12 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AirplaneDaoImpl implements AirplaneDao {
-    private static final String INSERT_QUERY = "INSERT INTO airplanes (codeName, model, manufactureDate, capacity, flightRange, crew) VALUES (?, ?, ?, ?, ?, ?);";
+    private static final String INSERT_QUERY = "INSERT INTO airplanes " +
+            "(codeName, model, manufactureDate, capacity, flightRange, crew) VALUES (?, ?, ?, ?, ?, ?) ;";
     private static final String FIND_ALL_SQL = "SELECT * FROM airplanes;";
     private static final String SELECT_BY_CODE_NAME_SQL = "SELECT * FROM airplanes WHERE codeName = ?;";
-    private static final String SELECT_BY_CREW_NAME_SQL = "SELECT * FROM crews WHERE crewName = ?;";
     private static final String DELETE_AIRPLANE_SQL = "delete from airplanes where id = ?;";
-    private static final String UPDATE_AIRPLANE_SQL = "UPDATE airplanes SET codeName = ?, model = ?, manufactureDate = ?, capacity = ?, flightRange = ?, crew = ? WHERE id = ?;";
 
     private DataSource dataSource;
 
@@ -39,7 +39,7 @@ public class AirplaneDaoImpl implements AirplaneDao {
             insertStatement.setDate(3, Date.valueOf(airplane.getManufactureDate()));
             insertStatement.setInt(4, airplane.getCapacity());
             insertStatement.setInt(5, airplane.getFlightRange());
-            insertStatement.setLong(6, (airplane.getCrew()).getId());
+            insertStatement.setObject(6, airplane.getCrew());
             insertStatement.executeUpdate();
             ResultSet generatedKeys = insertStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -64,8 +64,8 @@ public class AirplaneDaoImpl implements AirplaneDao {
                 LocalDate manufactureDate = rs.getDate("manufactureDate").toLocalDate();
                 int capacity = rs.getInt("capacity");
                 int flightRange = rs.getInt("flightRange");
-               // Crew crew = (rs.getLong("crew_id")).;
-               // airplaneArray.add(new Airplane(id, codeName, model, manufactureDate, capacity, flightRange, crew));
+                CrewMember crew = (CrewMember) rs.getObject("Crew");
+                airplaneArray.add(new Airplane(id, codeName, model, manufactureDate, capacity, flightRange, crew));
             }
         } catch (SQLException e) {
             throw new DaoOperationException("Couldn't save product ", e);
@@ -113,50 +113,11 @@ public class AirplaneDaoImpl implements AirplaneDao {
 
     @Override
     public Airplane findByCrewName(String crewName) {
-        Airplane airplane = new Airplane();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement selectByCrewNameStatement = connection.prepareStatement(SELECT_BY_CREW_NAME_SQL);) {
-            selectByCrewNameStatement.setString(1, crewName);
-            ResultSet resultSet = selectByCrewNameStatement.executeQuery();
-            if (resultSet.next()) {
-                airplane.setId(resultSet.getLong("id"));
-                airplane.setCodeName(resultSet.getString("name"));
-                airplane.setModel(resultSet.getString("model"));
-                airplane.setManufactureDate(resultSet.getDate("manufactureDate").toLocalDate());
-                airplane.setCapacity(resultSet.getInt("capacity"));
-                airplane.setFlightRange(resultSet.getInt("flightRange"));
-                //airplane.setCrew(resultSet.getLong("crew"));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return airplane;
+        return null;
     }
 
     @Override
-    public void update(Airplane airplane, Crew crew) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_AIRPLANE_SQL, PreparedStatement.RETURN_GENERATED_KEYS);) {
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (airplane.getId() == null) {
-                throw new DaoOperationException("Cannot find an airplane without ID");
-            }
-            if (airplane.getId() < 0) {
-                throw new DaoOperationException(String.format("Airplane with id = %d does not exist", airplane.getId()));
-            }
-            if (generatedKeys.next()) {
-                long id = generatedKeys.getLong(5);
-                airplane.setId(id);
-            }
-            statement.setString(1, airplane.getCodeName());
-            statement.setString(2, airplane.getModel());
-            statement.setDate(3, Date.valueOf(airplane.getManufactureDate()));
-            statement.setInt(4, (airplane.getCapacity()));
-            statement.setInt(5, airplane.getFlightRange());
-            statement.setLong(6, (airplane.getCrew()).getId());
-            statement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    public Airplane update(Crew crew) {
+        return null;
     }
 }
