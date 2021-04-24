@@ -46,8 +46,12 @@ public class CrewMember {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         CrewMember that = (CrewMember) o;
         return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && position == that.position && Objects.equals(birthday, that.birthday) && citizenship == that.citizenship;
     }
