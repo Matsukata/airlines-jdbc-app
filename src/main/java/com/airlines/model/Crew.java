@@ -1,16 +1,14 @@
 package com.airlines.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Crew {
-    private Long id;
-    private String name;
-    private List<CrewMember> crewMembers;
+    private final Long id;
+    private final String name;
+    private final List<CrewMember> crewMembers;
 
-    public Crew() {
-    }
-
-    public Crew(Long id, String name, List<CrewMember> crewMembers) {
+    Crew(Long id, String name, List<CrewMember> crewMembers) {
         this.id = id;
         this.name = name;
         this.crewMembers = crewMembers;
@@ -20,44 +18,25 @@ public class Crew {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<CrewMember> getCrewMembers() {
         return crewMembers;
     }
 
-    public void setCrewMembers(List<CrewMember> crewMembers) {
-        this.crewMembers = crewMembers;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Crew crew = (Crew) o;
-
-        if (id != null ? !id.equals(crew.id) : crew.id != null) return false;
-        if (name != null ? !name.equals(crew.name) : crew.name != null) return false;
-        return crewMembers != null ? crewMembers.equals(crew.crewMembers) : crew.crewMembers == null;
+        return Objects.equals(id, crew.id) && Objects.equals(name, crew.name) && Objects.equals(crewMembers, crew.crewMembers);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (crewMembers != null ? crewMembers.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name, crewMembers);
     }
 
     @Override

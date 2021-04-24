@@ -19,9 +19,9 @@ import java.util.List;
 public class AirplaneDaoImpl implements AirplaneDao {
     private static final String INSERT_QUERY = "INSERT INTO airplanes " +
             "(codeName, model, manufactureDate, capacity, flightRange, crew) VALUES (?, ?, ?, ?, ?, ?) ;";
-    private static final String FIND_ALL_SQL = "SELECT * FROM airplanes;";
-    private static final String SELECT_BY_CODE_NAME_SQL = "SELECT * FROM airplanes WHERE codeName = ?;";
-    private static final String DELETE_AIRPLANE_SQL = "delete from airplanes where id = ?;";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM airplanes;";
+    private static final String SELECT_BY_CODE_NAME_QUERY = "SELECT * FROM airplanes WHERE codeName = ?;";
+    private static final String DELETE_QUERY = "delete from airplanes where id = ?;";
 
     private DataSource dataSource;
 
@@ -33,21 +33,21 @@ public class AirplaneDaoImpl implements AirplaneDao {
     public void save(Airplane airplane) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement insertStatement = connection.prepareStatement(INSERT_QUERY,
-                     PreparedStatement.RETURN_GENERATED_KEYS);) {
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             insertStatement.setString(1, airplane.getCodeName());
             insertStatement.setString(2, airplane.getModel());
             insertStatement.setDate(3, Date.valueOf(airplane.getManufactureDate()));
             insertStatement.setInt(4, airplane.getCapacity());
             insertStatement.setInt(5, airplane.getFlightRange());
-            insertStatement.setObject(6, airplane.getCrew());
+            insertStatement.setObject(6, airplane.getCrewMember());
             insertStatement.executeUpdate();
             ResultSet generatedKeys = insertStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 long id = generatedKeys.getLong(1);
-                airplane.setId(id);
+                Airplane.builder().withId(id);
             }
         } catch (SQLException e) {
-            throw new DaoOperationException("Error saving product: " + airplane, e);
+            throw new DaoOperationException("Error saving airplane: " + airplane, e);
         }
     }
 
@@ -55,7 +55,7 @@ public class AirplaneDaoImpl implements AirplaneDao {
     public List<Airplane> findAll() {
         List<Airplane> airplaneArray = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY)) {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 long id = rs.getLong("id");
@@ -64,32 +64,41 @@ public class AirplaneDaoImpl implements AirplaneDao {
                 LocalDate manufactureDate = rs.getDate("manufactureDate").toLocalDate();
                 int capacity = rs.getInt("capacity");
                 int flightRange = rs.getInt("flightRange");
-                CrewMember crew = (CrewMember) rs.getObject("Crew");
-                airplaneArray.add(new Airplane(id, codeName, model, manufactureDate, capacity, flightRange, crew));
+                CrewMember crewMember = (CrewMember) rs.getObject("Crew");
+                airplaneArray.add(Airplane.builder()
+                        .withId(id)
+                        .withCodeName(codeName)
+                        .withModel(model)
+                        .withManufactureDate(manufactureDate)
+                        .withCapacity(capacity)
+                        .withFlightRange(flightRange)
+                        .withCrewMember(crewMember).build());
             }
         } catch (SQLException e) {
-            throw new DaoOperationException("Couldn't save product ", e);
+            throw new DaoOperationException("Couldn't find airplane", e);
         }
         return airplaneArray;
     }
 
     @Override
     public Airplane findOne(String codeName) {
-        Airplane airplane = new Airplane();
+        Airplane airplane = null;
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement selectByIdStatement = connection.prepareStatement(SELECT_BY_CODE_NAME_SQL);) {
-            selectByIdStatement.setString(1, codeName);
-            ResultSet resultSet = selectByIdStatement.executeQuery();
+             PreparedStatement selectByCodeNameStatement = connection.prepareStatement(SELECT_BY_CODE_NAME_QUERY);) {
+            selectByCodeNameStatement.setString(1, codeName);
+            ResultSet resultSet = selectByCodeNameStatement.executeQuery();
             if (resultSet.next()) {
-                airplane.setId(resultSet.getLong("id"));
-                airplane.setCodeName(resultSet.getString("name"));
-                airplane.setModel(resultSet.getString("model"));
-                airplane.setManufactureDate(resultSet.getDate("manufactureDate").toLocalDate());
-                airplane.setCapacity(resultSet.getInt("capacity"));
-                airplane.setFlightRange(resultSet.getInt("flightRange"));
+                airplane = Airplane.builder()
+                        .withId(resultSet.getLong("id"))
+                        .withCodeName(resultSet.getString("name"))
+                        .withModel(resultSet.getString("model"))
+                        .withManufactureDate(resultSet.getDate("manufactureDate").toLocalDate())
+                        .withCapacity(resultSet.getInt("capacity"))
+                        .withFlightRange(resultSet.getInt("flightRange"))
+                        .build();
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            throw new DaoOperationException("Could not find airplane", e);
         }
         return airplane;
     }
@@ -97,17 +106,14 @@ public class AirplaneDaoImpl implements AirplaneDao {
     @Override
     public void remove(Airplane airplane) {
         if (airplane.getId() == null) {
-            throw new DaoOperationException("Cannot find a product without ID");
-        }
-        if (airplane.getId() < 0) {
-            throw new DaoOperationException(String.format("Product with id = %d does not exist", airplane.getId()));
+            throw new DaoOperationException("Cannot remove an airplane without id");
         }
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_AIRPLANE_SQL);) {
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, airplane.getId());
             statement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            throw new DaoOperationException("Could not remove airplane", e);
         }
     }
 

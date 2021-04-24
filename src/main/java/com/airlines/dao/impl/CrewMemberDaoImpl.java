@@ -40,7 +40,7 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
             ResultSet generatedKeys = insertStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 long id = generatedKeys.getLong(1);
-                crewMember.setId(id);
+                CrewMember.builder().withId(id);
             }
         } catch (SQLException e) {
             throw new DaoOperationException("Could not save crewMember: " + crewMember, e);
@@ -50,19 +50,22 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
     @Override
     public CrewMember findById(Long id) {
         if (id == null) {
-            throw new DaoOperationException("Cannot find the member because Id is not provided");
+            throw new DaoOperationException("Cannot find the member because id is not provided");
         }
-        CrewMember crewMember = new CrewMember();
+        CrewMember crewMember = null;
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement selectByIdStatement = connection.prepareStatement(SELECT_BY_ID_QUERY);) {
+             PreparedStatement selectByIdStatement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
             selectByIdStatement.setLong(1, id);
             ResultSet resultSet = selectByIdStatement.executeQuery();
             if (resultSet.next()) {
-                crewMember.setId(resultSet.getLong("id"));
-                crewMember.setFirstName(resultSet.getString("first_name"));
-                crewMember.setLastName(resultSet.getString("last_name"));
-                crewMember.setPosition(Position.valueOf(resultSet.getString("position")));
-                crewMember.setCitizenship(Citizenship.valueOf(resultSet.getString("citizenship")));
+                crewMember = CrewMember.builder()
+                        .withId(resultSet.getLong("id"))
+                        .withFirstName(resultSet.getString("first_name"))
+                        .withLastName(resultSet.getString("last_name"))
+                        .withPosition(Position.valueOf(resultSet.getString("position")))
+                        .withBirthday(resultSet.getDate("birthday").toLocalDate())
+                        .withCitizenship(Citizenship.valueOf(resultSet.getString("citizenship")))
+                        .build();
             }
         } catch (SQLException e) {
             throw new DaoOperationException(format("Crew member with id = %d was not found", id), e);

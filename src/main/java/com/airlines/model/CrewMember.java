@@ -1,49 +1,35 @@
 package com.airlines.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class CrewMember {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private Position position;
-    private LocalDate birthday;
-    private Citizenship citizenship;
+    private final Long id;
+    private final String firstName;
+    private final String lastName;
+    private final Position position;
+    private final LocalDate birthday;
+    private final Citizenship citizenship;
 
-    public CrewMember() {
-    }
-
-    public CrewMember(Long id, String firstName, String lastName, Position position, LocalDate birthday, Citizenship citizenship) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.position = position;
-        this.birthday = birthday;
-        this.citizenship = citizenship;
+    public CrewMember(Builder builder) {
+        this.id = builder.id;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.position = builder.position;
+        this.birthday = builder.birthday;
+        this.citizenship = builder.citizenship;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public Position getPosition() {
@@ -54,60 +40,21 @@ public class CrewMember {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
     public Citizenship getCitizenship() {
         return citizenship;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public void setCitizenship(Citizenship citizenship) {
-        this.citizenship = citizenship;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        CrewMember crew = (CrewMember) o;
-
-        if (id != null ? !id.equals(crew.id) : crew.id != null) {
-            return false;
-        }
-        if (firstName != null ? !firstName.equals(crew.firstName) : crew.firstName != null) {
-            return false;
-        }
-        if (lastName != null ? !lastName.equals(crew.lastName) : crew.lastName != null) {
-            return false;
-        }
-        if (position != null ? !position.equals(crew.position) : crew.position != null) {
-            return false;
-        }
-        if (birthday != null ? !birthday.equals(crew.birthday) : crew.birthday != null) {
-            return false;
-        }
-        return citizenship != null ? citizenship.equals(crew.citizenship) : crew.citizenship == null;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CrewMember that = (CrewMember) o;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && position == that.position && Objects.equals(birthday, that.birthday) && citizenship == that.citizenship;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (position != null ? position.hashCode() : 0);
-        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
-        result = 31 * result + (citizenship != null ? citizenship.hashCode() : 0);
-        return result;
+        return Objects.hash(id, firstName, lastName, position, birthday, citizenship);
     }
 
     @Override
@@ -120,5 +67,55 @@ public class CrewMember {
                 ", birthday=" + birthday +
                 ", citizenship='" + citizenship + '\'' +
                 '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Long id;
+        private String firstName;
+        private String lastName;
+        private Position position;
+        private LocalDate birthday;
+        private Citizenship citizenship;
+
+        private Builder() {
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder withPosition(Position position) {
+            this.position = position;
+            return this;
+        }
+
+        public Builder withBirthday(LocalDate birthday) {
+            this.birthday = birthday;
+            return this;
+        }
+
+        public Builder withCitizenship(Citizenship citizenship) {
+            this.citizenship = citizenship;
+            return this;
+        }
+
+        public CrewMember build() {
+            return new CrewMember(this);
+        }
     }
 }
