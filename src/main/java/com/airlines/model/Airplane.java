@@ -1,112 +1,70 @@
 package com.airlines.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Airplane {
-    private Long id;
-    private String codeName;
-    private String model;
-    private LocalDate manufactureDate;
-    private int capacity;
-    private int flightRange;
-    private CrewMember crew;
+    private final Long id;
+    private final String codeName;
+    private final String model;
+    private final LocalDate manufactureDate;
+    private final int capacity;
+    private final int flightRange;
+    private final Crew crew;
 
-    public Airplane() {
-    }
-
-    public Airplane(Long id, String codeName, String model, LocalDate manufactureDate, int capacity, int flightRange, CrewMember crew) {
-        this.id = id;
-        this.codeName = codeName;
-        this.model = model;
-        this.manufactureDate = manufactureDate;
-        this.capacity = capacity;
-        this.flightRange = flightRange;
-        this.crew = crew;
+    private Airplane(Builder builder) {
+        this.id = builder.id;
+        this.codeName = builder.codeName;
+        this.model = builder.model;
+        this.manufactureDate = builder.manufactureDate;
+        this.capacity = builder.capacity;
+        this.flightRange = builder.flightRange;
+        this.crew = builder.crew;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getCodeName() {
         return codeName;
-    }
-
-    public void setCodeName(String codeName) {
-        this.codeName = codeName;
     }
 
     public String getModel() {
         return model;
     }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public LocalDate getManufactureDate() {
         return manufactureDate;
-    }
-
-    public void setManufactureDate(LocalDate manufactureDate) {
-        this.manufactureDate = manufactureDate;
     }
 
     public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
     public int getFlightRange() {
         return flightRange;
     }
 
-    public void setFlightRange(int flightRange) {
-        this.flightRange = flightRange;
-    }
-
-    public CrewMember getCrew() {
+    public Crew getCrew() {
         return crew;
-    }
-
-    public void setCrew(CrewMember crew) {
-        this.crew = crew;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Airplane airplane = (Airplane) o;
-
-        if (capacity != airplane.capacity) return false;
-        if (flightRange != airplane.flightRange) return false;
-        if (id != null ? !id.equals(airplane.id) : airplane.id != null) return false;
-        if (codeName != null ? !codeName.equals(airplane.codeName) : airplane.codeName != null) return false;
-        if (model != null ? !model.equals(airplane.model) : airplane.model != null) return false;
-        if (manufactureDate != null ? !manufactureDate.equals(airplane.manufactureDate) : airplane.manufactureDate != null)
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        return crew != null ? crew.equals(airplane.crew) : airplane.crew == null;
+        }
+        Airplane airplane = (Airplane) o;
+        return capacity == airplane.capacity && flightRange == airplane.flightRange && Objects.equals(id, airplane.id) && Objects.equals(codeName, airplane.codeName) && Objects.equals(model, airplane.model) && Objects.equals(manufactureDate, airplane.manufactureDate) && Objects.equals(crew, airplane.crew);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (codeName != null ? codeName.hashCode() : 0);
-        result = 31 * result + (model != null ? model.hashCode() : 0);
-        result = 31 * result + (manufactureDate != null ? manufactureDate.hashCode() : 0);
-        result = 31 * result + capacity;
-        result = 31 * result + flightRange;
-        result = 31 * result + (crew != null ? crew.hashCode() : 0);
-        return result;
+        return Objects.hash(id, codeName, model, manufactureDate, capacity, flightRange, crew);
     }
 
     @Override
@@ -120,5 +78,61 @@ public class Airplane {
                 ", flightRange=" + flightRange +
                 ", crew=" + crew +
                 '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Long id;
+        private String codeName;
+        private String model;
+        private LocalDate manufactureDate;
+        private int capacity;
+        private int flightRange;
+        private Crew crew;
+
+        private Builder() {
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withCodeName(String codeName) {
+            this.codeName = codeName;
+            return this;
+        }
+
+        public Builder withModel(String model) {
+            this.model = model;
+            return this;
+        }
+
+        public Builder withManufactureDate(LocalDate manufactureDate) {
+            this.manufactureDate = manufactureDate;
+            return this;
+        }
+
+        public Builder withCapacity(int capacity) {
+            this.capacity = capacity;
+            return this;
+        }
+
+        public Builder withFlightRange(int flightRange) {
+            this.flightRange = flightRange;
+            return this;
+        }
+
+        public Builder withCrew(Crew crew) {
+            this.crew = crew;
+            return this;
+        }
+
+        public Airplane build() {
+            return new Airplane(this);
+        }
     }
 }
