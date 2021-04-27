@@ -12,11 +12,11 @@ public interface AirplaneDao {
 
     List<Airplane> findAll();
 
-    Airplane findOne(String codeName);
+    Optional<Airplane> findByCodeName(String codeName);
 
-    void remove(Airplane airplane);
+    void remove(Long id);
 
-    Airplane findByCrewName(String crewName);
+    Optional<Airplane> findByCrewName(String crewName);
 
-    Airplane update(Crew crew);
+    void update(Airplane airplane, Crew crew);
 }
