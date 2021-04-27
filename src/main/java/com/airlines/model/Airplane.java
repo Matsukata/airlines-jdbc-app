@@ -52,8 +52,12 @@ public class Airplane {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Airplane airplane = (Airplane) o;
         return capacity == airplane.capacity && flightRange == airplane.flightRange && Objects.equals(id, airplane.id) && Objects.equals(codeName, airplane.codeName) && Objects.equals(model, airplane.model) && Objects.equals(manufactureDate, airplane.manufactureDate) && Objects.equals(crew, airplane.crew);
     }
