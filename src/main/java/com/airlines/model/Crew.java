@@ -1,5 +1,6 @@
 package com.airlines.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class Crew {
     Crew(Long id, String name, List<CrewMember> crewMembers) {
         this.id = id;
         this.name = name;
-        this.crewMembers = crewMembers;
+        this.crewMembers = Collections.unmodifiableList(crewMembers);
     }
 
     public Long getId() {

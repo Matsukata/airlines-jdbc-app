@@ -1,12 +1,13 @@
 package com.airlines.dao;
 
-import com.airlines.model.Airplane;
 import com.airlines.model.CrewMember;
 
+import java.util.Optional;
+
 public interface CrewMemberDao {
-    void save(CrewMember crew);
+    Optional<CrewMember> save(CrewMember crew);
 
-    CrewMember findById(Long id);
+    Optional<CrewMember> findById(Long id);
 
-    CrewMember update(CrewMember crewMember);
+    void update(CrewMember crewMember);
 }

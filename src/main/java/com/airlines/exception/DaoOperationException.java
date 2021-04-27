@@ -9,4 +9,3 @@ public class DaoOperationException extends RuntimeException {
         super(message, cause);
     }
 }
-

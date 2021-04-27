@@ -4,10 +4,11 @@ import com.airlines.model.Airplane;
 import com.airlines.model.Crew;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AirplaneDao {
 
-    void save(Airplane airplane);
+    Optional<Airplane> save(Airplane airplane);
 
     List<Airplane> findAll();
 

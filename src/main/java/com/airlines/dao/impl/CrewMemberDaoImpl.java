@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
@@ -27,7 +28,7 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
     }
 
     @Override
-    public void save(CrewMember crewMember) {
+    public Optional<CrewMember> save(CrewMember crewMember) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement insertStatement = connection.prepareStatement(INSERT_QUERY,
                      PreparedStatement.RETURN_GENERATED_KEYS);) {
@@ -40,41 +41,54 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
             ResultSet generatedKeys = insertStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 long id = generatedKeys.getLong(1);
-                CrewMember.builder().withId(id);
+                return Optional.of(copyAttributesAndSetId(crewMember, id));
+            } else {
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new DaoOperationException("Could not save crewMember: " + crewMember, e);
         }
     }
 
+    private CrewMember copyAttributesAndSetId(CrewMember crewMember, Long id) {
+        return CrewMember.builder()
+                .withId(id)
+                .withFirstName(crewMember.getFirstName())
+                .withLastName(crewMember.getLastName())
+                .withPosition(crewMember.getPosition())
+                .withBirthday(crewMember.getBirthday())
+                .withCitizenship(crewMember.getCitizenship())
+                .build();
+    }
+
     @Override
-    public CrewMember findById(Long id) {
+    public Optional<CrewMember> findById(Long id) {
         if (id == null) {
             throw new DaoOperationException("Cannot find the member because id is not provided");
         }
-        CrewMember crewMember = null;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement selectByIdStatement = connection.prepareStatement(SELECT_BY_ID_QUERY)) {
             selectByIdStatement.setLong(1, id);
             ResultSet resultSet = selectByIdStatement.executeQuery();
             if (resultSet.next()) {
-                crewMember = CrewMember.builder()
+                return Optional.of(CrewMember.builder()
                         .withId(resultSet.getLong("id"))
                         .withFirstName(resultSet.getString("first_name"))
                         .withLastName(resultSet.getString("last_name"))
                         .withPosition(Position.valueOf(resultSet.getString("position")))
                         .withBirthday(resultSet.getDate("birthday").toLocalDate())
                         .withCitizenship(Citizenship.valueOf(resultSet.getString("citizenship")))
-                        .build();
+                        .build());
+            } else {
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new DaoOperationException(format("Crew member with id = %d was not found", id), e);
         }
-        return crewMember;
     }
 
     @Override
-    public CrewMember update(CrewMember crewMember) {
+    public void update(CrewMember crewMember) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
             if (crewMember.getId() == null) {
@@ -90,6 +104,5 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
         } catch (SQLException e) {
             throw new DaoOperationException(format("Can not update a crew member with id = %d", crewMember.getId()), e);
         }
-        return crewMember;
     }
 }

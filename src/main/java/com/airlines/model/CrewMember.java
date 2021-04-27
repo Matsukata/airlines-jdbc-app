@@ -11,7 +11,7 @@ public class CrewMember {
     private final LocalDate birthday;
     private final Citizenship citizenship;
 
-    public CrewMember(Builder builder) {
+    private CrewMember(Builder builder) {
         this.id = builder.id;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;

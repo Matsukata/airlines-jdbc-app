@@ -10,16 +10,16 @@ public class Airplane {
     private final LocalDate manufactureDate;
     private final int capacity;
     private final int flightRange;
-    private final CrewMember crewMember;
+    private final Crew crew;
 
-    public Airplane(Builder builder) {
+    private Airplane(Builder builder) {
         this.id = builder.id;
         this.codeName = builder.codeName;
         this.model = builder.model;
         this.manufactureDate = builder.manufactureDate;
         this.capacity = builder.capacity;
         this.flightRange = builder.flightRange;
-        this.crewMember = builder.crewMember;
+        this.crew = builder.crew;
     }
 
     public Long getId() {
@@ -46,25 +46,21 @@ public class Airplane {
         return flightRange;
     }
 
-    public CrewMember getCrewMember() {
-        return crewMember;
+    public Crew getCrew() {
+        return crew;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Airplane airplane = (Airplane) o;
-        return capacity == airplane.capacity && flightRange == airplane.flightRange && Objects.equals(id, airplane.id) && Objects.equals(codeName, airplane.codeName) && Objects.equals(model, airplane.model) && Objects.equals(manufactureDate, airplane.manufactureDate) && Objects.equals(crewMember, airplane.crewMember);
+        return capacity == airplane.capacity && flightRange == airplane.flightRange && Objects.equals(id, airplane.id) && Objects.equals(codeName, airplane.codeName) && Objects.equals(model, airplane.model) && Objects.equals(manufactureDate, airplane.manufactureDate) && Objects.equals(crew, airplane.crew);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, codeName, model, manufactureDate, capacity, flightRange, crewMember);
+        return Objects.hash(id, codeName, model, manufactureDate, capacity, flightRange, crew);
     }
 
     @Override
@@ -76,7 +72,7 @@ public class Airplane {
                 ", manufactureDate=" + manufactureDate +
                 ", capacity=" + capacity +
                 ", flightRange=" + flightRange +
-                ", crew=" + crewMember +
+                ", crew=" + crew +
                 '}';
     }
 
@@ -91,7 +87,7 @@ public class Airplane {
         private LocalDate manufactureDate;
         private int capacity;
         private int flightRange;
-        private CrewMember crewMember;
+        private Crew crew;
 
         private Builder() {
         }
@@ -126,8 +122,8 @@ public class Airplane {
             return this;
         }
 
-        public Builder withCrewMember(CrewMember crewMember) {
-            this.crewMember = crewMember;
+        public Builder withCrew(Crew crew) {
+            this.crew = crew;
             return this;
         }
 
