@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import java.util.ResourceBundle;
 
 public class DbProvider {
-    private static ResourceBundle rb = ResourceBundle.getBundle("airlines");
+    private static ResourceBundle rb = ResourceBundle.getBundle("db");
 
     public static DataSource createDefaultPostgresDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();

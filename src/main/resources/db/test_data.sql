@@ -18,19 +18,19 @@ VALUES ('Boeing', '747', '2019-01-18', 130, 5000, 2);
 
 
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
-VALUES ('Igor', 'Shpack', 'PILOT_IN_COMMAND', '1983-12-08', 'RUSSIA');
+VALUES ('Igor', 'Shpack', 'PILOT_IN_COMMAND', '1983-12-08', 'BRAZILIAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
-VALUES ('Igor', 'Tkachenko', 'PILOT_IN_COMMAND', '1980-10-08', 'RUSSIA');
+VALUES ('Igor', 'Tkachenko', 'PILOT_IN_COMMAND', '1980-10-08', 'ITALIAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
-VALUES ('Dmitriy', 'Hachkovskiy', 'PILOT_IN_COMMAND', '1979-02-08', 'RUSSIA');
+VALUES ('Dmitriy', 'Hachkovskiy', 'PILOT_IN_COMMAND', '1979-02-08', 'NORWEGIAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
-VALUES ('Oleg', 'Ryapolov', 'AIRCRAFT_PILOT', '1986-12-04', 'RUSSIA');
+VALUES ('Oleg', 'Ryapolov', 'AIRCRAFT_PILOT', '1986-12-04', 'KOREAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
-VALUES ('Egor', 'Shleeman', 'FLIGHT_ENGINEER', '1987-05-08', 'RUSSIA');
+VALUES ('Egor', 'Shleeman', 'FLIGHT_ENGINEER', '1987-05-08', 'BRAZILIAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
-VALUES ('Eugene', 'Danilov', 'SECOND_OFFICER', '1991-10-08', 'RUSSIA');
+VALUES ('Eugene', 'Danilov', 'SECOND_OFFICER', '1991-10-08', 'ITALIAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
-VALUES ('Marat', 'Abakulov', 'FIRST_OFFICER', '1994-03-08', 'RUSSIA');
+VALUES ('Marat', 'Abakulov', 'FIRST_OFFICER', '1994-03-08', 'NORWEGIAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
 VALUES ('Mi', 'Chen', 'FLIGHT_ATTENDANT', '1995-10-08', 'CHINESE');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
@@ -38,13 +38,13 @@ VALUES ('Mary', 'Jones', 'FLIGHT_ATTENDANT', '1994-12-03', 'BRAZILIAN');
 INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship)
 VALUES ('Jane', 'Lewis', 'FLIGHT_ATTENDANT', '1992-10-01', 'NORWEGIAN');
 
-INSERT INTO crews_crew_members (crews_id, crew_members_id)
-VALUES (1, 10);
-INSERT INTO crews_crew_members (crews_id, crew_members_id)
-VALUES (2, 9);
-INSERT INTO crews_crew_members (crews_id, crew_members_id)
-VALUES (3, 8);
-INSERT INTO crews_crew_members (crews_id, crew_members_id)
-VALUES (1, 1);
-INSERT INTO crews_crew_members (crews_id, crew_members_id)
-VALUES (1, 5);
+INSERT INTO crews_crew_members (crew_id, crew_member_id)
+VALUES (1, 12);
+INSERT INTO crews_crew_members (crew_id, crew_member_id)
+VALUES (2, 19);
+INSERT INTO crews_crew_members (crew_id, crew_member_id)
+VALUES (3, 18);
+INSERT INTO crews_crew_members (crew_id, crew_member_id)
+VALUES (1, 11);
+INSERT INTO crews_crew_members (crew_id, crew_member_id)
+VALUES (1, 15);

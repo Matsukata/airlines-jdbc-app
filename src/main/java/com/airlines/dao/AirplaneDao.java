@@ -1,7 +1,6 @@
 package com.airlines.dao;
 
 import com.airlines.model.Airplane;
-import com.airlines.model.Crew;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,5 +17,5 @@ public interface AirplaneDao {
 
     Optional<Airplane> findByCrewName(String crewName);
 
-    void update(Airplane airplane, Crew crew);
+    void updateWithCrewId(Airplane airplane, Long crewId);
 }
