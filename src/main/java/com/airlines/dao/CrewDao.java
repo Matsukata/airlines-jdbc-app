@@ -8,9 +8,9 @@ import java.util.List;
 public interface CrewDao {
     void add(CrewMember crewMember, Crew crew);
 
-    List<CrewMember> getByCrewId(long id);
+    List<CrewMember> getByCrewId(Long crewId);
 
     List<CrewMember> getByCrewName(String name);
 
-    void removeCrewMemberFromCrew(CrewMember crewMember);
+    void removeCrewMemberFromCrew(Crew crew, CrewMember crewMember);
 }
