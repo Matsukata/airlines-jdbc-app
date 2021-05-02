@@ -9,7 +9,7 @@ public class Crew {
     private final String name;
     private final List<CrewMember> crewMembers;
 
-    Crew(Long id, String name, List<CrewMember> crewMembers) {
+    public Crew(Long id, String name, List<CrewMember> crewMembers) {
         this.id = id;
         this.name = name;
         this.crewMembers = Collections.unmodifiableList(crewMembers);
