@@ -31,7 +31,7 @@ public class CrewMemberDaoImpl implements CrewMemberDao {
     public Optional<CrewMember> save(CrewMember crewMember) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement insertStatement = connection.prepareStatement(INSERT_QUERY,
-                     PreparedStatement.RETURN_GENERATED_KEYS);) {
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             insertStatement.setString(1, crewMember.getFirstName());
             insertStatement.setString(2, crewMember.getLastName());
             insertStatement.setString(3, crewMember.getPosition().name());

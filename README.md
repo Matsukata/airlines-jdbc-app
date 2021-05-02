@@ -12,10 +12,11 @@
     ```
    CREATE USER airlines;
    ALTER USER airlines WITH PASSWORD 'airlines';
-   CREATE DATABASE airlines;
-   GRANT ALL PRIVILEGES ON database airlines to airlines;
-   GRANT SELECT ON ALL TABLES IN schema PUBLIC to airlines;
+   CREATE DATABASE airlines;   
+   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA PUBLIC TO airlines;
+   GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA PUBLIC TO airlines;
     ```
+
 2. Execute *resource/schema.sql* script
 
 3. Execute *resource/test_data.sql* script for mock data (optional)

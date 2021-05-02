@@ -39,12 +39,12 @@ INSERT INTO crew_members (first_name, last_name, position, birthday, citizenship
 VALUES ('Jane', 'Lewis', 'FLIGHT_ATTENDANT', '1992-10-01', 'NORWEGIAN');
 
 INSERT INTO crews_crew_members (crew_id, crew_member_id)
-VALUES (1, 12);
+VALUES (1, 2);
 INSERT INTO crews_crew_members (crew_id, crew_member_id)
-VALUES (2, 19);
+VALUES (2, 9);
 INSERT INTO crews_crew_members (crew_id, crew_member_id)
-VALUES (3, 18);
+VALUES (3, 8);
 INSERT INTO crews_crew_members (crew_id, crew_member_id)
-VALUES (1, 11);
+VALUES (1, 1);
 INSERT INTO crews_crew_members (crew_id, crew_member_id)
-VALUES (1, 15);
+VALUES (1, 5);

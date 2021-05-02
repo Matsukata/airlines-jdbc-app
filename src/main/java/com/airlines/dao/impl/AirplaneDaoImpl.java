@@ -23,7 +23,7 @@ public class AirplaneDaoImpl implements AirplaneDao {
     private static final String SELECT_BY_CODE_NAME_QUERY = "SELECT * FROM airplanes WHERE code_name = ?;";
     private static final String DELETE_QUERY = "DELETE FROM airplanes WHERE id = ?;";
     private static final String SELECT_BY_CREW_NAME_QUERY = "SELECT * FROM airplanes LEFT JOIN crews ON airplanes.crew_id = crews.id WHERE crews.name = ?;";
-    private static final String UPDATE_WITH_CREW_QUERY = "UPDATE airplanes SET crew_id = crews.id FROM crews WHERE airplanes.id = ? AND crews.id = ?;";
+    private static final String UPDATE_WITH_CREW_QUERY = "UPDATE airplanes SET crew_id = ? WHERE airplanes.id = ?;";
 
     private DataSource dataSource;
 
@@ -35,7 +35,7 @@ public class AirplaneDaoImpl implements AirplaneDao {
     public Optional<Airplane> save(Airplane airplane) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement insertStatement = connection.prepareStatement(INSERT_QUERY,
-                     PreparedStatement.RETURN_GENERATED_KEYS);) {
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             insertStatement.setString(1, airplane.getCodeName());
             insertStatement.setString(2, airplane.getModel());
             insertStatement.setDate(3, Date.valueOf(airplane.getManufactureDate()));
@@ -57,11 +57,10 @@ public class AirplaneDaoImpl implements AirplaneDao {
 
     @Override
     public List<Airplane> findAll() {
-        List<Airplane> list;
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            list = new ArrayList<>();
+            List<Airplane> list = new ArrayList<>();
             while (resultSet.next()) {
                 list.add(Airplane.builder()
                         .withId(resultSet.getLong("id"))
@@ -73,16 +72,16 @@ public class AirplaneDaoImpl implements AirplaneDao {
                         .withCrewId(resultSet.getLong("crew_id"))
                         .build());
             }
+            return Collections.unmodifiableList(list);
         } catch (SQLException e) {
-            throw new DaoOperationException("Cannot find an airplane ", e);
+            throw new DaoOperationException("Cannot find airplanes", e);
         }
-        return Collections.unmodifiableList(list);
     }
 
     @Override
     public Optional<Airplane> findByCodeName(String codeName) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement selectByCodeNameStatement = connection.prepareStatement(SELECT_BY_CODE_NAME_QUERY);) {
+             PreparedStatement selectByCodeNameStatement = connection.prepareStatement(SELECT_BY_CODE_NAME_QUERY)) {
             selectByCodeNameStatement.setString(1, codeName);
             ResultSet resultSet = selectByCodeNameStatement.executeQuery();
             if (resultSet.next()) {
@@ -104,16 +103,16 @@ public class AirplaneDaoImpl implements AirplaneDao {
     }
 
     @Override
-    public void remove(Long id) {
-        if (id == null) {
+    public void removeById(Long airplaneId) {
+        if (airplaneId == null) {
             throw new IllegalArgumentException("Cannot remove an airplane without id");
         }
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);) {
-            statement.setLong(1, id);
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
+            statement.setLong(1, airplaneId);
             statement.executeQuery();
         } catch (SQLException e) {
-            throw new DaoOperationException(format("Cannot remove an airplane with id = %s", id), e);
+            throw new DaoOperationException(format("Cannot remove an airplane with id = %s", airplaneId), e);
         }
     }
 
@@ -151,8 +150,8 @@ public class AirplaneDaoImpl implements AirplaneDao {
             if (crewId == null) {
                 throw new IllegalArgumentException("Airplane crewId should not be null");
             }
-            statement.setLong(1, airplane.getId());
-            statement.setLong(2, crewId);
+            statement.setLong(1, crewId);
+            statement.setLong(2, airplane.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoOperationException(format("Cannot update an airplane with crewId = %d", crewId), e);

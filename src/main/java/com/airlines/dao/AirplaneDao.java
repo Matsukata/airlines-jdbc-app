@@ -13,7 +13,7 @@ public interface AirplaneDao {
 
     Optional<Airplane> findByCodeName(String codeName);
 
-    void remove(Long id);
+    void removeById(Long airplaneId);
 
     Optional<Airplane> findByCrewName(String crewName);
 
