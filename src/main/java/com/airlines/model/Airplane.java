@@ -10,7 +10,7 @@ public class Airplane {
     private final LocalDate manufactureDate;
     private final int capacity;
     private final int flightRange;
-    private final Crew crew;
+    private final Long crewId;
 
     private Airplane(Builder builder) {
         this.id = builder.id;
@@ -19,7 +19,7 @@ public class Airplane {
         this.manufactureDate = builder.manufactureDate;
         this.capacity = builder.capacity;
         this.flightRange = builder.flightRange;
-        this.crew = builder.crew;
+        this.crewId = builder.crewId;
     }
 
     public Long getId() {
@@ -46,8 +46,8 @@ public class Airplane {
         return flightRange;
     }
 
-    public Crew getCrew() {
-        return crew;
+    public Long getCrewId() {
+        return crewId;
     }
 
     @Override
@@ -59,12 +59,12 @@ public class Airplane {
             return false;
         }
         Airplane airplane = (Airplane) o;
-        return capacity == airplane.capacity && flightRange == airplane.flightRange && Objects.equals(id, airplane.id) && Objects.equals(codeName, airplane.codeName) && Objects.equals(model, airplane.model) && Objects.equals(manufactureDate, airplane.manufactureDate) && Objects.equals(crew, airplane.crew);
+        return capacity == airplane.capacity && flightRange == airplane.flightRange && Objects.equals(id, airplane.id) && Objects.equals(codeName, airplane.codeName) && Objects.equals(model, airplane.model) && Objects.equals(manufactureDate, airplane.manufactureDate) && Objects.equals(crewId, airplane.crewId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, codeName, model, manufactureDate, capacity, flightRange, crew);
+        return Objects.hash(id, codeName, model, manufactureDate, capacity, flightRange, crewId);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class Airplane {
                 ", manufactureDate=" + manufactureDate +
                 ", capacity=" + capacity +
                 ", flightRange=" + flightRange +
-                ", crew=" + crew +
+                ", crewId=" + crewId +
                 '}';
     }
 
@@ -91,7 +91,7 @@ public class Airplane {
         private LocalDate manufactureDate;
         private int capacity;
         private int flightRange;
-        private Crew crew;
+        private Long crewId;
 
         private Builder() {
         }
@@ -126,8 +126,8 @@ public class Airplane {
             return this;
         }
 
-        public Builder withCrew(Crew crew) {
-            this.crew = crew;
+        public Builder withCrewId(Long crewId) {
+            this.crewId = crewId;
             return this;
         }
 
