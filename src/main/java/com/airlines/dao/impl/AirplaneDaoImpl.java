@@ -110,7 +110,7 @@ public class AirplaneDaoImpl implements AirplaneDao {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, airplaneId);
-            statement.executeQuery();
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoOperationException(format("Cannot remove an airplane with id = %s", airplaneId), e);
         }
