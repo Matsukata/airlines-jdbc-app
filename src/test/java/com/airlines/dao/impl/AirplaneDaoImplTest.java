@@ -55,7 +55,9 @@ public class AirplaneDaoImplTest {
     @Test
     public void shouldSaveAirplane() throws SQLException {
         populateTestData();
+
         Optional<Airplane> savedAirplane = airplaneDao.save(AIRPLANE);
+
         assertTrue(savedAirplane.isPresent());
         assertEquals(AIRPLANE, savedAirplane.get());
     }
@@ -95,10 +97,12 @@ public class AirplaneDaoImplTest {
     public void shouldRemoveById() throws SQLException {
         populateTestData();
         airplaneDao.save(AIRPLANE);
-        List<Airplane> list = airplaneDao.findAll();
-        assertTrue(list.contains(AIRPLANE));
+        List<Airplane> listBeforeRemove = airplaneDao.findAll();
 
         airplaneDao.removeById(AIRPLANE.getId());
+
+        assertEquals(6, listBeforeRemove.size());
+        assertTrue(listBeforeRemove.contains(AIRPLANE));
 
         List<Airplane> listAfterRemove = airplaneDao.findAll();
         assertFalse(listAfterRemove.contains(AIRPLANE));
