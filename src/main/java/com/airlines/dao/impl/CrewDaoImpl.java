@@ -109,7 +109,7 @@ public class CrewDaoImpl implements CrewDao {
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, crew.getId());
             statement.setLong(2, crewMember.getId());
-            statement.executeUpdate();
+            statement.execute();
         } catch (SQLException e) {
             throw new DaoOperationException(format("Cannot remove a crew member with id = %d from crew with id = %d", crewMember.getId(), crew.getId()), e);
         }

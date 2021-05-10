@@ -16,15 +16,18 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import static com.airlines.model.Position.FLIGHT_ATTENDANT;
+import static com.airlines.model.Position.PILOT_IN_COMMAND;
+import static com.airlines.model.Citizenship.CHINESE;
+import static com.airlines.model.Citizenship.BRAZILIAN;
+import static com.airlines.model.Citizenship.ITALIAN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static com.airlines.model.Citizenship.BRAZILIAN;
-import static com.airlines.model.Citizenship.ITALIAN;
-import static com.airlines.model.Position.PILOT_IN_COMMAND;
 
 public class CrewDaoImplTest {
     private static final String SCHEMA_SQL_PATH = "src/test/resources/sql/schema.sql";
@@ -51,6 +54,13 @@ public class CrewDaoImplTest {
     }
 
     @Test
+    public void shouldThrowExceptionIfCrewMemberNotProvidedToAddMethod() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> crewDao.add(null, CREW));
+
+        assertEquals("Valid crewMember entity should be provided", exception.getMessage());
+    }
+
+    @Test
     public void shouldThrowExceptionIfCrewMemberWithNoIdProvidedToAddMethod() {
         CrewMember crewMember = CrewMember.builder()
                 .withId(null)
@@ -59,6 +69,13 @@ public class CrewDaoImplTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> crewDao.add(crewMember, null));
 
         assertEquals("Valid crewMember entity should be provided", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionIfCrewNotProvidedToAddMethod() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> crewDao.add(CREW_MEMBER, null));
+
+        assertEquals("Valid crew entity should be provided", exception.getMessage());
     }
 
     @Test
@@ -73,29 +90,43 @@ public class CrewDaoImplTest {
     @Test
     public void shouldCorrectlyAddCrewMemberToCrew() throws SQLException {
         populateTestData();
-        crewDao.add(CREW_MEMBER, CREW);
+        CrewMember crewMember = CrewMember.builder()
+                .withId(8L)
+                .withFirstName("Mi")
+                .withLastName("Chen")
+                .withPosition(FLIGHT_ATTENDANT)
+                .withBirthday(LocalDate.of(1995, 10, 8))
+                .withCitizenship(CHINESE)
+                .build();
+
+        crewDao.add(crewMember, CREW);
         List<CrewMember> list = crewDao.getByCrewId(CREW.getId());
-        assertTrue(list.contains(CREW_MEMBER));
+
+        assertTrue(list.contains(crewMember));
     }
 
     @Test
     public void shouldGetCrewMembersByCrewId() throws SQLException {
         populateTestData();
+        Comparator<CrewMember> crewMemberIdComparator = Comparator.comparing(CrewMember::getId);
         List<CrewMember> list = crewDao.getByCrewId(1L);
-        assertEquals(3, list.size());
+        List<CrewMember> resultList = new ArrayList<>(list);
+        Collections.sort(resultList, crewMemberIdComparator);
 
-        CrewMember crewMember1 = list.get(0);
-        CrewMember crewMember2 = list.get(1);
-        CrewMember crewMember3 = list.get(2);
+        CrewMember crewMember1 = resultList.get(0);
+        CrewMember crewMember2 = resultList.get(1);
+        CrewMember crewMember3 = resultList.get(2);
 
-        assertEquals("Igor", crewMember1.getFirstName());
+        assertEquals(1L, crewMember1.getId().longValue());
         assertEquals("Shpack", crewMember1.getLastName());
 
-        assertEquals("Igor", crewMember2.getFirstName());
+        assertEquals(2L, crewMember2.getId().longValue());
         assertEquals("Tkachenko", crewMember2.getLastName());
 
-        assertEquals("Egor", crewMember3.getFirstName());
+        assertEquals(5L, crewMember3.getId().longValue());
         assertEquals("Shleeman", crewMember3.getLastName());
+
+        assertEquals(3, list.size());
     }
 
     @Test
@@ -106,25 +137,29 @@ public class CrewDaoImplTest {
     }
 
     @Test
-    public void getByCrewName() throws SQLException {
+    public void shouldGetCrewMembersByCrewName() throws SQLException {
         populateTestData();
+        Comparator<CrewMember> crewMemberIdComparator = Comparator.comparing(CrewMember::getId);
+
         List<CrewMember> list = crewDao.getByCrewName("Vityaz");
-        assertEquals(3, list.size());
+        List<CrewMember> resultList = new ArrayList<>(list);
+        Collections.sort(resultList, crewMemberIdComparator);
 
-        CrewMember crewMember1 = list.get(0);
-        CrewMember crewMember2 = list.get(1);
-        CrewMember crewMember3 = list.get(2);
+        CrewMember crewMember1 = resultList.get(0);
+        CrewMember crewMember2 = resultList.get(1);
+        CrewMember crewMember3 = resultList.get(2);
 
+        assertEquals(1L, crewMember1.getId().longValue());
         assertEquals("Igor", crewMember1.getFirstName());
-        assertEquals("Shpack", crewMember1.getLastName());
 
+        assertEquals(2L, crewMember2.getId().longValue());
         assertEquals("Igor", crewMember2.getFirstName());
-        assertEquals("Tkachenko", crewMember2.getLastName());
 
+        assertEquals(5L, crewMember3.getId().longValue());
         assertEquals("Egor", crewMember3.getFirstName());
-        assertEquals("Shleeman", crewMember3.getLastName());
-    }
 
+        assertEquals(3, resultList.size());
+    }
 
     @Test
     public void shouldRemoveCrewMemberFromCrew() throws SQLException {
