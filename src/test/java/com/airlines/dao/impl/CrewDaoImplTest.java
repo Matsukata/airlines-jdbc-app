@@ -100,8 +100,8 @@ public class CrewDaoImplTest {
                 .build();
 
         crewDao.add(crewMember, CREW);
-        List<CrewMember> list = crewDao.getByCrewId(CREW.getId());
 
+        List<CrewMember> list = crewDao.getByCrewId(CREW.getId());
         assertTrue(list.contains(crewMember));
     }
 
@@ -109,10 +109,11 @@ public class CrewDaoImplTest {
     public void shouldGetCrewMembersByCrewId() throws SQLException {
         populateTestData();
         Comparator<CrewMember> crewMemberIdComparator = Comparator.comparing(CrewMember::getId);
+
         List<CrewMember> list = crewDao.getByCrewId(1L);
+
         List<CrewMember> resultList = new ArrayList<>(list);
         Collections.sort(resultList, crewMemberIdComparator);
-
         CrewMember crewMember1 = resultList.get(0);
         CrewMember crewMember2 = resultList.get(1);
         CrewMember crewMember3 = resultList.get(2);
@@ -132,7 +133,9 @@ public class CrewDaoImplTest {
     @Test
     public void shouldThrowExceptionIfCrewIsNotProvidedForGetByIdMethod() {
         Crew invalidCrew = buildInvalidCrewFromDataSet();
+
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> crewDao.getByCrewId(invalidCrew.getId()));
+
         assertEquals("Cannot find crew members for crew without id", exception.getMessage());
     }
 
@@ -142,21 +145,21 @@ public class CrewDaoImplTest {
         Comparator<CrewMember> crewMemberIdComparator = Comparator.comparing(CrewMember::getId);
 
         List<CrewMember> list = crewDao.getByCrewName("Vityaz");
+
         List<CrewMember> resultList = new ArrayList<>(list);
         Collections.sort(resultList, crewMemberIdComparator);
-
         CrewMember crewMember1 = resultList.get(0);
         CrewMember crewMember2 = resultList.get(1);
         CrewMember crewMember3 = resultList.get(2);
 
         assertEquals(1L, crewMember1.getId().longValue());
-        assertEquals("Igor", crewMember1.getFirstName());
+        assertEquals("Shpack", crewMember1.getLastName());
 
         assertEquals(2L, crewMember2.getId().longValue());
-        assertEquals("Igor", crewMember2.getFirstName());
+        assertEquals("Tkachenko", crewMember2.getLastName());
 
         assertEquals(5L, crewMember3.getId().longValue());
-        assertEquals("Egor", crewMember3.getFirstName());
+        assertEquals("Shleeman", crewMember3.getLastName());
 
         assertEquals(3, resultList.size());
     }
@@ -173,6 +176,13 @@ public class CrewDaoImplTest {
     }
 
     @Test
+    public void shouldThrowExceptionIfCrewMemberNotProvidedToRemoveMethod() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> crewDao.removeCrewMemberFromCrew(CREW, null));
+
+        assertEquals("Valid crewMember entity should be provided", exception.getMessage());
+    }
+
+    @Test
     public void shouldThrowExceptionIfCrewMemberWithNoIdProvidedToRemoveMethod() {
         CrewMember crewMember = CrewMember.builder()
                 .withId(null)
@@ -181,6 +191,13 @@ public class CrewDaoImplTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> crewDao.removeCrewMemberFromCrew(CREW, crewMember));
 
         assertEquals("Valid crewMember entity should be provided", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionIfCrewNotProvidedToRemoveMethod() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> crewDao.removeCrewMemberFromCrew(null, CREW_MEMBER));
+
+        assertEquals("Valid crew entity should be provided", exception.getMessage());
     }
 
     @Test
