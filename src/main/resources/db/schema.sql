@@ -12,7 +12,7 @@ CREATE TABLE crews
 CREATE TABLE airplanes
 (
     id               SERIAL PRIMARY KEY,
-    code_name        VARCHAR(10) NOT NULL,
+    code_name        VARCHAR(10) NOT NULL UNIQUE,
     model            VARCHAR(64) NOT NULL,
     manufacture_date DATE        NOT NULL,
     capacity         INT         NOT NULL,
