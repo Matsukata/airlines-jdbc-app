@@ -19,7 +19,7 @@ import java.util.List;
 import static java.lang.String.format;
 
 public class CrewDaoImpl implements CrewDao {
-    private static final String ADD_CREW_MEMBER_BY_CREW_QUERY = "INSERT INTO crews_crew_members (crew_id, crew_member_id) VALUES (?, ?);";
+    private static final String ADD_CREW_MEMBER_BY_CREW_QUERY = "INSERT INTO crews_crew_members (crew_member_id, crew_id) VALUES (?, ?);";
     private static final String SELECT_BY_CREW_ID_QUERY = "SELECT * FROM crew_members LEFT JOIN crews_crew_members ON crew_members.id = crews_crew_members.crew_member_id WHERE crews_crew_members.crew_id = ?;";
     private static final String SELECT_BY_CREW_NAME_QUERY = "SELECT * FROM crew_members INNER JOIN crews_crew_members ON crew_members.id = crews_crew_members.crew_member_id INNER JOIN crews ON crews_crew_members.crew_id = crews.id WHERE crews.name = ?;";
     private static final String DELETE_QUERY = "DELETE FROM crews_crew_members WHERE crew_id = ? AND crew_member_id = ?;";
@@ -109,7 +109,7 @@ public class CrewDaoImpl implements CrewDao {
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
             statement.setLong(1, crew.getId());
             statement.setLong(2, crewMember.getId());
-            statement.executeQuery();
+            statement.execute();
         } catch (SQLException e) {
             throw new DaoOperationException(format("Cannot remove a crew member with id = %d from crew with id = %d", crewMember.getId(), crew.getId()), e);
         }
